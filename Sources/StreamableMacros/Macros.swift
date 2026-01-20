@@ -20,7 +20,7 @@ public struct StreamableMacro: MemberMacro, MemberAttributeMacro {
         in context: some MacroExpansionContext
     ) throws -> [AttributeSyntax] {
         
-        guard let actorDecl = node.parent?.parent?.as(ActorDeclSyntax.self) else {
+        guard declaration.is(ActorDeclSyntax.self) else {
             return []
         }
         
