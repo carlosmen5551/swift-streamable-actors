@@ -1,14 +1,70 @@
 //
-//  StreamableIgnoredMacro.swift
+//  StreamableActorsMacro.swift
 //  swift-streamable-actors
 //
-//  Created by Malcolm Hall on 20/01/2026.
+//  Created by Malcolm Hall on 21/01/2026.
 //
 
-
+import SwiftCompilerPlugin
 import SwiftSyntax
+import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 import Foundation
+
+enum StreamableMacroError: CustomStringConvertible, Error {
+    case onlyActors
+    
+    var description: String {
+        switch self {
+            case .onlyActors: return "@Streamable can only be applied to an 'actor'."
+        }
+    }
+}
+
+public struct StreamableIgnoredMacro: PeerMacro {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingPeersOf declaration: some DeclSyntaxProtocol,
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        // This macro does nothing by design;
+        // it is used as a marker for @Streamable to ignore properties.
+        return []
+    }
+}
+
+public struct StreamablePropertyMacro: AccessorMacro {
+    public static func expansion(
+        of node: AttributeSyntax,
+        providingAccessorsOf declaration: some DeclSyntaxProtocol,
+        in context: some MacroExpansionContext
+    ) throws -> [AccessorDeclSyntax] {
+        
+        let isInsideActor = context.lexicalContext.contains {
+            $0.as(ActorDeclSyntax.self) != nil
+        }
+        if !isInsideActor { return [] }
+        
+        guard let varDecl = declaration.as(VariableDeclSyntax.self),
+              let identifier = varDecl.bindings.first?.pattern.as(IdentifierPatternSyntax.self)?.identifier.text else {
+            return []
+        }
+        
+        return [
+            """
+            get { _\(raw: identifier) }
+            """,
+            """
+            set {
+                _\(raw: identifier) = newValue
+                for obs in \(raw: identifier)Observers.values {
+                    obs.yield(newValue)
+                }
+            }
+            """
+        ]
+    }
+}
 
 public struct StreamableMacro: MemberMacro, MemberAttributeMacro {
     
@@ -31,7 +87,7 @@ public struct StreamableMacro: MemberMacro, MemberAttributeMacro {
             attr.as(AttributeSyntax.self)?.attributeName.description.contains("StreamableIgnored") ?? false
         }
         
-        return isIgnored ? [] : ["@StreamedProperty"]
+        return isIgnored ? [] : ["@StreamableProperty"]
     }
     
     // 2. Member Pass: Generate Storage, Observers, and Factories
@@ -102,48 +158,11 @@ public struct StreamableMacro: MemberMacro, MemberAttributeMacro {
     }
 }
 
-public struct StreamablePropertyMacro: AccessorMacro {
-    public static func expansion(
-        of node: AttributeSyntax,
-        providingAccessorsOf declaration: some DeclSyntaxProtocol,
-        in context: some MacroExpansionContext
-    ) throws -> [AccessorDeclSyntax] {
-        
-        let isInsideActor = context.lexicalContext.contains {
-            $0.as(ActorDeclSyntax.self) != nil
-        }
-        if !isInsideActor { return [] }
-        
-        guard let varDecl = declaration.as(VariableDeclSyntax.self),
-              let identifier = varDecl.bindings.first?.pattern.as(IdentifierPatternSyntax.self)?.identifier.text else {
-            return []
-        }
-        
-        return [
-            """
-            get { _\(raw: identifier) }
-            """,
-            """
-            set {
-                _\(raw: identifier) = newValue
-                for obs in \(raw: identifier)Observers.values {
-                    obs.yield(newValue)
-                }
-            }
-            """
-        ]
-    }
-}
-
-
-public struct StreamableIgnoredMacro: PeerMacro {
-    public static func expansion(
-        of node: AttributeSyntax,
-        providingPeersOf declaration: some DeclSyntaxProtocol,
-        in context: some MacroExpansionContext
-    ) throws -> [DeclSyntax] {
-        // This macro does nothing by design; 
-        // it is used as a marker for @Streamable to ignore properties.
-        return []
-    }
+@main
+struct StreamableActorsPlugin: CompilerPlugin {
+    let providingMacros: [Macro.Type] = [
+        StreamableMacro.self,
+        StreamablePropertyMacro.self,
+        StreamableIgnoredMacro.self
+    ]
 }

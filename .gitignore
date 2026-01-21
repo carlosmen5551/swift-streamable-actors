@@ -61,4 +61,7 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
+# Custom
 .DS_Store
+.swiftpm
+Package.resolved

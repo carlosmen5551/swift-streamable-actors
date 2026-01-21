@@ -22,7 +22,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
         .macro(
-            name: "StreamableMacros",
+            name: "StreamableActorsMacros",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
@@ -30,7 +30,7 @@ let package = Package(
         ),
 
         // Library that exposes a macro as part of its API, which is used in client programs.
-        .target(name: "StreamableActors", dependencies: ["StreamableMacros"]),
+        .target(name: "StreamableActors", dependencies: ["StreamableActorsMacros"]),
 
         
 
@@ -38,7 +38,7 @@ let package = Package(
         .testTarget(
             name: "StreamableActorsTests",
             dependencies: [
-                "StreamableMacros",
+                "StreamableActorsMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
         ),
